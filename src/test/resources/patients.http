@@ -1,6 +1,10 @@
 ### GET patient by name
-GET http://localhost:8080/patients?name=smith
+GET http://localhost:8083/patients/by-name?name=john
 
 
 ### GET patient
-GET http://localhost:8080/patients/2853
+GET http://localhost:8083/patients/44ec4447-9e2c-4eb9-bd4f-0bdb416b806e
+
+
+### GET patient
+GET http://localhost:8083/patients?page=0&size=10

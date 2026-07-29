@@ -1,0 +1,15 @@
+services:
+  fhir:
+    image: smartonfhir/hapi-5:r4-synthea
+    ports:
+      - "8085:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:fhirdb
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15

@@ -1,7 +1,19 @@
+
 spring:
   application:
     name: healthygation
+
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
       base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start_only
+
+healthygation:
+    fhir:
+        base-url: ${FHIR_BASE_URL:http://localhost:8085/hapi-fhir-jpaserver/fhir/}
+server:
+  port: ${PORT:8083}
