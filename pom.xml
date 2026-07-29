@@ -29,14 +29,14 @@
 	<properties>
 		<java.version>25</java.version>
 		<spring-ai.version>2.0.0</spring-ai.version>
-        <hapi-fhir.version>6.8.0</hapi-fhir.version>
+        <hapi-fhir.version>8.8.0</hapi-fhir.version>
     </properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-        <!-- HAPI FHIR Base i Data Structures (R4) -->
+        <!-- HAPI FHIR Base and Data Structures (R5) -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-structures-r4</artifactId>
+            <artifactId>hapi-fhir-structures-r5</artifactId>
             <version>${hapi-fhir.version}</version>
         </dependency>
         <dependency>
@@ -56,6 +56,13 @@
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-starter-model-openai</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-docker-compose</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
