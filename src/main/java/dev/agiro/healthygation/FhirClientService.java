@@ -4,8 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.apache.ApacheRestfulClientFactory;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +42,30 @@ public class FhirClientService {
 		return fhirClient.search()
 				.forResource(Patient.class)
 				.where(Patient.FAMILY.matches().value(identifier))
+				.returnBundle(Bundle.class)
+				.execute();
+	}
+
+	public Bundle searchConditionsByPatient(String patientId) {
+		return fhirClient.search()
+				.forResource(Condition.class)
+				.where(Condition.PATIENT.hasId(patientId))
+				.returnBundle(Bundle.class)
+				.execute();
+	}
+
+	public Bundle searchMedicationRequestsByPatient(String patientId) {
+		return fhirClient.search()
+				.forResource(MedicationRequest.class)
+				.where(MedicationRequest.PATIENT.hasId(patientId))
+				.returnBundle(Bundle.class)
+				.execute();
+	}
+
+	public Bundle searchObservationsByPatient(String patientId) {
+		return fhirClient.search()
+				.forResource(Observation.class)
+				.where(Observation.PATIENT.hasId(patientId))
 				.returnBundle(Bundle.class)
 				.execute();
 	}
