@@ -1,0 +1,23 @@
+### Ask a pattern question
+POST http://localhost:8083/graph-rag/ask
+Content-Type: application/json
+
+{
+  "question": "Which patients have diabetes and also take metformin?"
+}
+
+### Ask about observations
+POST http://localhost:8083/graph-rag/ask
+Content-Type: application/json
+
+{
+  "question": "What conditions appear together with hypertension in this cohort?"
+}
+
+### Ask a cohort summary question
+POST http://localhost:8083/graph-rag/ask
+Content-Type: application/json
+
+{
+  "question": "Summarize the most common conditions across all patients."
+}
