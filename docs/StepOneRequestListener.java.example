@@ -1,0 +1,34 @@
+package dev.agiro.healthygation.microb;
+
+import dev.agiro.healthygation.batch.model.BatchModel.ExternalCallResponse;
+import dev.agiro.healthygation.batch.model.BatchModel.SourceItem;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+/**
+ * EXEMPLE per al micro B (aplicació Spring Boot normal, sense Spring Batch).
+ * Consumeix la cua b.requests i retorna el Response: Spring AMQP el torna al reply-to
+ * del missatge, que és el que espera l'outbound gateway del micro A.
+ *
+ * Cal el mateix model (BatchModel) i el mateix MessageConverter que a A
+ * (vegeu ServiceBMessagingConfig). Escala B afegint instàncies a la mateixa cua.
+ */
+@Component
+public class StepOneRequestListener {
+
+    /** Aquí va la lògica lenta real de B. */
+    public interface ItemDecisionService {
+        ExternalCallResponse process(SourceItem item);
+    }
+
+    private final ItemDecisionService service;
+
+    public StepOneRequestListener(ItemDecisionService service) {
+        this.service = service;
+    }
+
+    @RabbitListener(queues = "b.requests")
+    public ExternalCallResponse handle(SourceItem item) {
+        return service.process(item);
+    }
+}

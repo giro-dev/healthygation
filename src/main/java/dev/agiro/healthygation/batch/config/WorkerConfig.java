@@ -1,0 +1,55 @@
+package dev.agiro.healthygation.batch.config;
+
+import dev.agiro.healthygation.batch.model.BatchModel.CommandOutcome;
+import dev.agiro.healthygation.batch.model.BatchModel.ExternalCallResultRow;
+import dev.agiro.healthygation.batch.worker.CommandOutcomeWriter;
+import dev.agiro.healthygation.batch.worker.CommandProcessor;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.batch.integration.chunk.RemoteChunkingWorkerBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.integration.amqp.dsl.Amqp;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.dsl.IntegrationFlow;
+
+/**
+ * Workers del STEP 2 (perfil "worker"): escolten step2.requests, executen processor + writer
+ * del chunk i responen per step2.replies. Pots arrencar tantes instàncies com vulguis.
+ * (El step 1 ja no passa per aquí: va per request-reply cap a B.)
+ */
+@Configuration
+@Profile("worker")
+public class WorkerConfig {
+
+    @Bean DirectChannel step2WorkerIn()  { return new DirectChannel(); }
+    @Bean DirectChannel step2WorkerOut() { return new DirectChannel(); }
+
+    @Bean
+    IntegrationFlow step2WorkerInbound(ConnectionFactory cf) {
+        return IntegrationFlow.from(Amqp.inboundAdapter(cf, RemoteChunkingQueuesConfig.STEP2_REQUESTS))
+                .channel(step2WorkerIn())
+                .get();
+    }
+
+    @Bean
+    IntegrationFlow step2WorkerOutbound(AmqpTemplate amqp) {
+        return IntegrationFlow.from(step2WorkerOut())
+                .handle(Amqp.outboundAdapter(amqp)
+                        .exchangeName(RemoteChunkingQueuesConfig.EXCHANGE)
+                        .routingKey(RemoteChunkingQueuesConfig.STEP2_REPLIES))
+                .get();
+    }
+
+    @Bean
+    IntegrationFlow step2WorkerHandler(CommandProcessor processor,
+                                       CommandOutcomeWriter writer) {
+        return new RemoteChunkingWorkerBuilder<ExternalCallResultRow, CommandOutcome>()
+                .itemProcessor(processor)
+                .itemWriter(writer)
+                .inputChannel(step2WorkerIn())
+                .outputChannel(step2WorkerOut())
+                .build();
+    }
+}
