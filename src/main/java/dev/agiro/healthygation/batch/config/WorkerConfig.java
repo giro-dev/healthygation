@@ -7,6 +7,7 @@ import dev.agiro.healthygation.batch.worker.CommandProcessor;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.batch.integration.chunk.RemoteChunkingWorkerBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -27,8 +28,12 @@ public class WorkerConfig {
     @Bean DirectChannel step2WorkerOut() { return new DirectChannel(); }
 
     @Bean
-    IntegrationFlow step2WorkerInbound(ConnectionFactory cf) {
-        return IntegrationFlow.from(Amqp.inboundAdapter(cf, RemoteChunkingQueuesConfig.STEP2_REQUESTS))
+    IntegrationFlow step2WorkerInbound(ConnectionFactory cf,
+                                       @Value("${healthygation.batch.worker.prefetch:2}") int prefetch) {
+        // Cada missatge és un chunk sencer: amb prefetch baix un worker només acumula
+        // uns pocs chunks sense confirmar i la resta es reparteixen entre els altres pods.
+        return IntegrationFlow.from(Amqp.inboundAdapter(cf, RemoteChunkingQueuesConfig.STEP2_REQUESTS)
+                        .configureContainer(c -> c.prefetchCount(prefetch)))
                 .channel(step2WorkerIn())
                 .get();
     }
