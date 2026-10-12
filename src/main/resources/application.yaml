@@ -20,7 +20,7 @@ spring:
     jdbc:
       initialize-schema: always
     job:
-      enabled: false   # només s'activa amb el perfil "manager" (application-manager.yaml)
+      enabled: false   # el job es llança des del trigger (JobLauncher), no en arrencar el pod
   sql:
     init:
       mode: always
@@ -31,6 +31,9 @@ spring:
       lifecycle-management: start_only
 
 healthygation:
+    batch:
+        # identifica el pod (cua de respostes step2.replies.<id>); a Kubernetes HOSTNAME = nom del pod
+        instance-id: ${HOSTNAME:${random.uuid}}
     fhir:
         base-url: ${FHIR_BASE_URL:http://localhost:8085/hapi-fhir-jpaserver/fhir/}
 server:

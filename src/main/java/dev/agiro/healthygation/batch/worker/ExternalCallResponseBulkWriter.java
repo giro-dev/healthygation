@@ -4,7 +4,6 @@ import dev.agiro.healthygation.batch.model.BatchModel.ExternalCallResponse;
 import java.util.List;
 import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.batch.infrastructure.item.ItemWriter;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
  * Idempotent: si el chunk es reintenta, el segon intent sobreescriu amb el mateix resultat.
  */
 @Component
-@Profile("manager")
 public class ExternalCallResponseBulkWriter implements ItemWriter<ExternalCallResponse> {
 
     private final JdbcTemplate jdbc;

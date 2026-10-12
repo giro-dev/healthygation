@@ -4,13 +4,11 @@ import dev.agiro.healthygation.batch.model.BatchModel.CommandOutcome;
 import java.util.List;
 import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.batch.infrastructure.item.ItemWriter;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 /** Step 2 (worker): desa el resultat final de cada comanda, en bloc i idempotent. */
 @Component
-@Profile("worker")
 public class CommandOutcomeWriter implements ItemWriter<CommandOutcome> {
 
     private final JdbcTemplate jdbc;

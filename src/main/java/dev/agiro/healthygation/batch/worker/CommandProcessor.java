@@ -3,7 +3,6 @@ package dev.agiro.healthygation.batch.worker;
 import dev.agiro.healthygation.batch.model.BatchModel.CommandOutcome;
 import dev.agiro.healthygation.batch.model.BatchModel.ExternalCallResultRow;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
  * llançar la comanda multi-pas i l'executa.
  */
 @Component
-@Profile("worker")
 public class CommandProcessor implements ItemProcessor<ExternalCallResultRow, CommandOutcome> {
 
     /** Contracte de la comanda multi-pas (pots delegar a un servei o a un Tasklet). */

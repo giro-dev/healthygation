@@ -12,7 +12,6 @@ import org.springframework.batch.integration.async.AsyncItemProcessor;
 import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.annotation.MessagingGateway;
@@ -23,7 +22,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import dev.agiro.healthygation.batch.worker.ExternalCallResponseBulkWriter;
 
 /**
- * STEP 1 al micro A (perfil "manager"): reader, processor i writer viuen tots a A.
+ * STEP 1 al micro A: reader, processor i writer viuen tots a A.
  * El processor fa un request-reply per RabbitMQ cap al micro B (que NO és Spring Batch)
  * i, gràcies a AsyncItemProcessor, els items d'un chunk viatgen a B en paral·lel.
  * AsyncItemWriter espera tots els Future i el writer fa un bulk upsert amb les respostes.
@@ -31,7 +30,6 @@ import dev.agiro.healthygation.batch.worker.ExternalCallResponseBulkWriter;
  * NOTA: comprova els imports/paquets de Spring Batch contra la versió de Spring Boot 4.1.
  */
 @Configuration
-@Profile("manager")
 @IntegrationComponentScan(basePackageClasses = Step1AsyncConfig.class)
 public class Step1AsyncConfig {
 

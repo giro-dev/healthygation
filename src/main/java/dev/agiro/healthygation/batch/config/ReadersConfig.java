@@ -8,12 +8,10 @@ import org.springframework.batch.infrastructure.item.database.JdbcCursorItemRead
 import org.springframework.batch.infrastructure.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.DataClassRowMapper;
 
-/** Readers dels dos steps (perfil "manager"). Ajusta les queries a les taules reals. */
+/** Readers dels dos steps. Ajusta les queries a les taules reals. */
 @Configuration
-@Profile("manager")
 public class ReadersConfig {
 
     @Bean
